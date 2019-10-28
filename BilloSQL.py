@@ -18,14 +18,21 @@ def tokenizer(file):
         c = content[i].split()
         for j in range(len(c)):
             if c[j].islower():
-                c[j].upper()
+                c[j] = c[j].upper()
             for key in nterminale:
                 b = c[j]
                 if b.split(";")[0] in nterminale.get(key):
                     tokens.append(key)
-            if list(c[j])[-1] == ";" and key != terminale[0]:
+            if list(c[j])[-1] == ";" and key != terminale[0] and not ("\'" in list(c[j]) or "\"" in list(c[j])):#(list(c[j])[0] == "\"" or list(c[j])[0] == "\'" or list(c[j])):
                 tokens.append(terminale[1])
-    print(grammar_check())
+            if list(c[j])[0] == "\"" and list(c[j])[-1] == "\"" or list(c[j])[0] == "\'"  and list(c[j])[-1] == "\'" \
+                    and len(list(c[j])) > 2:
+                tokens.append(terminale[1])
+
+    if(grammar_check()):
+        print("Die Anweisung ist richtig")
+    else:
+        print("Die Anweisung ist nicht richtig")
 
 def grammar_check():
     global tokens
