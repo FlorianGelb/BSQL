@@ -1,17 +1,26 @@
+import DummyDB
+
+DB = DummyDB.DummyDB()
+
 terminale = ("Expr", "Inp")
 nterminale = {terminale[0]:("SELECT", "FROM"), terminale[1]:"*"}
 
 tokens = []
+content = []
+
+programm_counter = 0
 
 def file_parser(file):
     content = []
     with open(file) as f:
         for line in f.read().split("\n"):
-            content.append(line)
+            if len(line) > 0:
+                content.append(line)
     return content
 
 def tokenizer(file):
     global tokens
+    global content
     content = file_parser(file)
     for i in range(len(content)):
         content[i].upper()
@@ -29,14 +38,15 @@ def tokenizer(file):
                     and len(list(c[j])) > 2:
                 tokens.append(terminale[1])
 
-    if(grammar_check()):
-        print("Die Anweisung ist richtig")
-    else:
-        print("Die Anweisung ist nicht richtig")
+        if(grammar_check()):
+            parser()
+        else:
+            print("Die Anweisung ist nicht richtig")
 
 def grammar_check():
     global tokens
     global terminale
+    print(tokens)
     buffer = None
     order = 0
     for i in range(len(tokens)):
@@ -54,7 +64,30 @@ def grammar_check():
         return 1
     return 0
 
+
+def parser():
+    global content
+    global tokens
+    global programm_counter
+
+    content_buffer = content[programm_counter].split()
+    print (content[programm_counter].split())
+    token_buffer = tokens
+    for i in range(len(content_buffer)):
+        try:
+            if i == token_buffer.index("Expr"):
+                content_buffer[i] = content_buffer[i].upper()
+                token_buffer[i] = None
+        except ValueError:
+            pass
+
+    if content_buffer[0].upper() == "SELECT":
+        print(DB.get(content_buffer[1].replace("\'", "").replace("\"", ""), content_buffer[content_buffer.index("FROM") + 1].split(";")[0]))
+        tokens = []
+    else:
+        print("Anweisung ist semantisch sinnlos")
+    programm_counter += 1
+
 def run():
     tokenizer("Goal.txt")
-
 run()

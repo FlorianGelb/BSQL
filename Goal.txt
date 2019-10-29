@@ -1,1 +1,5 @@
-SELECT 'a' FROM a;
+select 'KEY' from DB;
+select 'KEYa' from DB;
+
+select 'KEY' from DB;
+select 'KEYa' from DB;
