@@ -1,5 +1,1 @@
-select 'KEY' from DB;
-select 'KEYa' from DB;
-
-select 'KEY' from DB;
-select 'KEYa' from DB;
+SELECT "1" from DB;
