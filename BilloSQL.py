@@ -1,4 +1,5 @@
 import DummyDB
+import sys
 
 DB = DummyDB.DummyDB()
 
@@ -9,6 +10,9 @@ tokens = []
 content = []
 
 programm_counter = 0
+
+#def cmd_parser(arg):
+
 
 def file_parser(file):
     content = []
@@ -21,7 +25,8 @@ def file_parser(file):
 def tokenizer(file):
     global tokens
     global content
-    content = file_parser(file)
+    if file is not None and len(content) == 0:
+        content = file_parser(file)
     for i in range(len(content)):
         content[i].upper()
         c = content[i].split()
@@ -91,5 +96,29 @@ def parser():
     programm_counter += 1
 
 def run():
-    tokenizer("Goal.txt")
+    args = sys.argv
+    print(args)
+    cmd = ""
+    if args[-1] != "-f" and "-f" in args and "-c" not in args:
+        try:
+            file = args[args.index("-f") + 1]
+            tokenizer(file)
+        except ValueError:
+            print("Parameter sind falsch angegeben oder der Pfad existiert nicht")
+            exit(1)
+
+    if args[-1] != "-c" and "-c" in args:
+        try:
+            if "-f" not in args and "-c" in args:
+                for i in range(args.index("-c") + 1, len(args)):
+                    if i != len(args) - 1:
+                        cmd += args[i] + " "
+                    else:
+                        cmd += args[i]
+            content.append(cmd)
+            tokenizer(None)
+        except ValueError:
+            print("Parameter sind falsch angegeben oder der Pfad existiert nicht")
+            exit(2)
+
 run()
