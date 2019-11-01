@@ -4,12 +4,16 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN", "SAVE", "HALLO", "LOAD"), terminale[1]:("*", "KEYS")}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN", "SAVE", "HALLO", "LOAD"), \
+              terminale[1]:("*", "KEYS")}
 
 tokens = []
 content = []
 
+temp_content = []
 programm_counter = 0
+
+
 
 def file_parser(file):
     content = []
@@ -22,6 +26,7 @@ def file_parser(file):
 def tokenizer(file):
     global tokens
     global content
+    print ("Content ist {} lang PC {}".format(len(content), programm_counter))
     if file is not None and len(content) == 0:
         content = file_parser(file)
     for i in range(len(content)):
@@ -46,6 +51,8 @@ def tokenizer(file):
             if list(c[j])[-1] == ",":
                 tokens.append(terminale[1])
                 tokens.append(terminale[0])
+            # if(list(c[j])[-1] == ";"):
+#               tokens.append(terminale[2])
 
         if(grammar_check()):
             parser()
@@ -82,9 +89,8 @@ def parser():
     global content
     global tokens
     global programm_counter
-
+    global temp_content
     columns = []
-    print(programm_counter)
     content_buffer = content[programm_counter].split()
     #print (content[programm_counter].split())
     token_buffer = tokens
@@ -136,14 +142,18 @@ def parser():
         tokens = []
 
     elif content_buffer[0] == "HALLO":
+        del content[0]
+        temp_content = content
+        DB.reset()
+        content = file_parser(content_buffer[1].replace(";","").replace("\"","").replace("\'",""))
+        content = content + temp_content
         tokens = []
-        content = []
-        programm_counter = 0
-        temp_content_buffer = content_buffer[1]
-        content_buffer = []
-        tokenizer(temp_content_buffer.replace(";","").replace("\"","").replace("\'",""))
+        tokenizer(None)
+        programm_counter = -1
+
     else:
         print("Anweisung ist semantisch sinnlos")
+
     programm_counter += 1
 
 def run():

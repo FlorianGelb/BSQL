@@ -78,3 +78,9 @@ class DummyDB:
             except ValueError:
                 pass
         return key
+
+    def reset(self):
+        for name in self.names:
+            exec("del{}".format(name))
+
+
