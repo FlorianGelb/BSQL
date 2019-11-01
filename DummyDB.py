@@ -1,15 +1,9 @@
 class DummyDB:
 
-    DB = {}
     names = []
     def __init__(self, key = None, value = None, name = None):
         if(key != None and value != None and name != None):
             self.DB[key] = value
-        else:
-            self.names.append("DB")
-            self.DB["KEY"] = "VALUE"
-            self.DB["1"] = "2"
-            self.DB[1] = "f"
 
     def get_all(self):
         ret = []
@@ -59,7 +53,7 @@ class DummyDB:
         key = self.key_type_converter(key)
         name = name.replace("\"","").replace("\'", "")
         try:
-            content = eval("self.{}".format(name))
+            content = eval("self.{}".format(name).replace(";", ""))
             if key in list(content.keys()):
                 exist = True
             else:

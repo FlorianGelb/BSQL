@@ -28,8 +28,7 @@ def tokenizer(file):
         content[i].upper()
         c = content[i].split()
         for j in range(len(c)):
-            if c[j].islower():
-                c[j] = c[j].upper()
+            c[j] = c[j].upper()
             for key in nterminale:
                 b = c[j]
                 if b in nterminale.get(key):
@@ -97,7 +96,7 @@ def parser():
             pass
 
     if content_buffer[0].upper() == "SELECT":
-        print(DB.get(content_buffer[1], content_buffer[content_buffer.index("FROM") + 1].split(";")[0]))
+        print(DB.get(content_buffer[1].upper(), content_buffer[content_buffer.index("FROM") + 1].split(";")[0]))
         tokens = []
     elif content_buffer[0].upper() == "CREATE":
         for i in range(content_buffer.index("WITH") + 1, len(content_buffer)):
@@ -123,7 +122,7 @@ def parser():
                             columns += str(key)
                         if type(key) == str:
                             columns += "\"{}\"".format(key)
-                file.writelines("CREATE \"{}\" WITH {};".format(Save[i][0], columns) + "\n")
+                file.writelines("CREATE {} WITH {};".format(Save[i][0], columns) + "\n")
                 for j in list(Save[i][1].items()):
                     for k in j:
                         if type(j[0]) == str:
@@ -131,7 +130,7 @@ def parser():
                         else:
                             key = j[0]
                         if j.index(k) != 0:
-                            file.writelines("SET {} TO {}; \n".format(key, k))
+                            file.writelines("SET {} IN {} TO {}; \n".format(key, Save[i][0], k))
         tokens = []
     else:
         print("Anweisung ist semantisch sinnlos")
@@ -145,7 +144,8 @@ def run():
         try:
             file = args[args.index("-f") + 1]
             tokenizer(file)
-        except ValueError:
+        except ValueError as e:
+            print(e)
             print("Parameter sind falsch angegeben oder der Pfad existiert nicht")
             exit(1)
 
