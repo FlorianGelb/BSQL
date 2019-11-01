@@ -1,15 +1,22 @@
 class DummyDB:
 
     DB = {}
-
+    names = []
     def __init__(self, key = None, value = None, name = None):
         if(key != None and value != None and name != None):
             self.DB[key] = value
         else:
+            self.names.append("DB")
             self.DB["KEY"] = "VALUE"
             self.DB["1"] = "2"
             self.DB[1] = "f"
 
+    def get_all(self):
+        ret = []
+        for name in self.names:
+            content = eval("self.{}".format(name).replace("\"", "").replace("\'", ""))
+            ret.append((name, content))
+        return (ret)
 
     def get(self, key, name):
         exist = False
@@ -21,7 +28,6 @@ class DummyDB:
                 return list(content.values())
             if key == "KEYS":
                 return list(content.keys())
-
         except NameError:
             exist = False
             print("{} existiert nicht in {}".format(key, name))
@@ -41,6 +47,7 @@ class DummyDB:
                 else:
                     append += key.replace(",", "").replace(";", "") + ":None"
             exec("self.{} = {}".format(name.replace("\"", "").replace("\'", ""), "{" + append + "}"))
+            self.names.append(name)
             #print(self.Table)
         except NameError:
             print("{} existiert nicht in {}".format(key, name))

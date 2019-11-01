@@ -1,0 +1,8 @@
+CREATE "DB" WITH "KEY", "1", 1;
+SET "KEY" TO VALUE; 
+SET "1" TO 2; 
+SET 1 TO f; 
+CREATE ""Table"" WITH "KEY", "1", 1"C1", "C2", "C3";
+SET "C1" TO None; 
+SET "C2" TO None; 
+SET "C3" TO 5; 

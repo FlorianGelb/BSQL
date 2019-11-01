@@ -4,7 +4,7 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN"), terminale[1]:("*", "KEYS")}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN", "SAVE"), terminale[1]:("*", "KEYS")}
 
 tokens = []
 content = []
@@ -84,7 +84,7 @@ def parser():
     global tokens
     global programm_counter
 
-    colums = []
+    columns = []
     content_buffer = content[programm_counter].split()
     #print (content[programm_counter].split())
     token_buffer = tokens
@@ -101,11 +101,37 @@ def parser():
         tokens = []
     elif content_buffer[0].upper() == "CREATE":
         for i in range(content_buffer.index("WITH") + 1, len(content_buffer)):
-            colums.append(content_buffer[i])
-        DB.create(colums, content_buffer[1])
+            columns.append(content_buffer[i])
+        DB.create(columns, content_buffer[1])
         tokens = []
     elif content_buffer[0].upper() == "SET":
         DB.set(content_buffer[1], content_buffer[content_buffer.index("TO") + 1].replace(";",""), content_buffer[content_buffer.index("IN") + 1])
+        tokens = []
+    elif content_buffer[0].upper() == "SAVE":
+        Save = DB.get_all()
+        columns = ""
+        with open(content_buffer[-1].replace(";", "").replace("\"", "").replace("\'", ""), "a+") as file:
+            for i in range(len(Save)):
+                for key in list(Save[i][1].keys()):
+                    if list(Save[i][1]).index(key) != len(list(Save[i][1].keys())) - 1:
+                        if type(key)  == int:
+                            columns += str(key) + ", "
+                        if type(key) == str:
+                            columns += "\"{}\"".format(key) + ", "
+                    else:
+                        if type(key)  == int:
+                            columns += str(key)
+                        if type(key) == str:
+                            columns += "\"{}\"".format(key)
+                file.writelines("CREATE \"{}\" WITH {};".format(Save[i][0], columns) + "\n")
+                for j in list(Save[i][1].items()):
+                    for k in j:
+                        if type(j[0]) == str:
+                            key = "\"{}\"".format(j[0])
+                        else:
+                            key = j[0]
+                        if j.index(k) != 0:
+                            file.writelines("SET {} TO {}; \n".format(key, k))
         tokens = []
     else:
         print("Anweisung ist semantisch sinnlos")
