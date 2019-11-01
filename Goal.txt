@@ -5,3 +5,8 @@ SELECT * FROM Table2;
 
 SELECT KEYS from Table;
 SELECT KEYS from Table2;
+
+CReate "Table3" WITH "C2", "C3";
+SET "C2" IN "Table3" TO 432;
+
+SAVE "save.bdb"

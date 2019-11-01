@@ -1,5 +1,6 @@
 import DummyDB
 import sys
+import os
 
 DB = DummyDB.DummyDB()
 
@@ -116,7 +117,8 @@ def parser():
     elif content_buffer[0].upper() == "SAVE":
         Save = DB.get_all()
         columns = ""
-        with open(content_buffer[-1].replace(";", "").replace("\"", "").replace("\'", ""), "a+") as file:
+        with open(content_buffer[-1].replace(";", "").replace("\"", "").replace("\'", ""), "w+") as file:
+            file.truncate(0)
             for i in range(len(Save)):
                 for key in list(Save[i][1].keys()):
                     if list(Save[i][1]).index(key) != len(list(Save[i][1].keys())) - 1:
