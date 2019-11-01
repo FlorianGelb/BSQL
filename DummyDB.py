@@ -19,6 +19,8 @@ class DummyDB:
             exist = True
             if key == "*":
                 return list(content.values())
+            if key == "KEYS":
+                return list(content.keys())
 
         except NameError:
             exist = False
@@ -29,7 +31,7 @@ class DummyDB:
             return content.get(key)
 
     def create(self, keys, name):
-        print(keys)
+        #print(keys)
         append = ""
         try:
             for key in keys:
@@ -39,7 +41,7 @@ class DummyDB:
                 else:
                     append += key.replace(",", "").replace(";", "") + ":None"
             exec("self.{} = {}".format(name.replace("\"", "").replace("\'", ""), "{" + append + "}"))
-            print(self.Table)
+            #print(self.Table)
         except NameError:
             print("{} existiert nicht in {}".format(key, name))
         except AttributeError as e:
@@ -48,9 +50,13 @@ class DummyDB:
     def set(self, key, value, name):
         exist = False
         key = self.key_type_converter(key)
+        name = name.replace("\"","").replace("\'", "")
         try:
             content = eval("self.{}".format(name))
-            exist = True
+            if key in list(content.keys()):
+                exist = True
+            else:
+                print("Die Spalte {} existiert nicht".format(key))
             if key == "*":
                 for key in content.keys:
                     content[key] = value

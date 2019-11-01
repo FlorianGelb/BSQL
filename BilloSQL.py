@@ -4,7 +4,7 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN"), terminale[1]:"*"}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN"), terminale[1]:("*", "KEYS")}
 
 tokens = []
 content = []
@@ -56,7 +56,7 @@ def tokenizer(file):
 def grammar_check():
     global tokens
     global terminale
-    print(tokens)
+    #print(tokens)
     buffer = None
     order = 0
     for i in range(len(tokens)):
@@ -86,7 +86,7 @@ def parser():
 
     colums = []
     content_buffer = content[programm_counter].split()
-    print (content[programm_counter].split())
+    #print (content[programm_counter].split())
     token_buffer = tokens
     for i in range(len(content_buffer)):
         try:
@@ -104,13 +104,16 @@ def parser():
             colums.append(content_buffer[i])
         DB.create(colums, content_buffer[1])
         tokens = []
+    elif content_buffer[0].upper() == "SET":
+        DB.set(content_buffer[1], content_buffer[content_buffer.index("TO") + 1].replace(";",""), content_buffer[content_buffer.index("IN") + 1])
+        tokens = []
     else:
         print("Anweisung ist semantisch sinnlos")
     programm_counter += 1
 
 def run():
     args = sys.argv
-    print(args)
+    #print(args)
     cmd = ""
     if args[-1] != "-f" and "-f" in args and "-c" not in args:
         try:

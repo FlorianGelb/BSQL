@@ -1,2 +1,4 @@
 CREATE "Table" WITH "C1", "C2", "C3";
 SET "C3" IN "Table" TO 5;
+SET "C4" IN "Table" TO 4;
+SELECT * FROM Table;
