@@ -4,15 +4,12 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM"), terminale[1]:"*"}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH"), terminale[1]:"*"}
 
 tokens = []
 content = []
 
 programm_counter = 0
-
-#def cmd_parser(arg):
-
 
 def file_parser(file):
     content = []
@@ -37,13 +34,19 @@ def tokenizer(file):
                 b = c[j]
                 if b in nterminale.get(key):
                     tokens.append(key)
-            if list(c[j])[-1] == ";" and key != terminale[0] and not ("\'" in list(c[j]) or "\"" in list(c[j])):#(list(c[j])[0] == "\"" or list(c[j])[0] == "\'" or list(c[j])):
-                tokens.append(terminale[1])
+            if list(c[j])[-1] == ";" and key != terminale[0]:
+                if c[0] == "SELECT" and not ("\'" in list(c[j]) or "\"" in list(c[j])):
+                    tokens.append(terminale[1])
+                elif c[0] != "SELECT":
+                    tokens.append(terminale[1])
             if list(c[j])[0] == "\"" and list(c[j])[-1] == "\"" or list(c[j])[0] == "\'"  and list(c[j])[-1] == "\'" \
                     and len(list(c[j])) > 2:
                 tokens.append(terminale[1])
             if c[j] in [str(n) for n in range(10)]:
                 tokens.append(terminale[1])
+            if list(c[j])[-1] == ",":
+                tokens.append(terminale[1])
+                tokens.append(terminale[0])
 
         if(grammar_check()):
             parser()
@@ -62,10 +65,14 @@ def grammar_check():
         elif buffer is None and tokens[i] != terminale[0]:
             return 0
         if buffer is not None:
-            if tokens[i] == terminale[0]:
+            if tokens[i] == terminale[0] and tokens[i - 1] != terminale[0]:
                 order += 1
-            if tokens[i] == terminale[1]:
+            elif tokens[i] == terminale[0] and tokens[i - 1] == terminale[0]:
+                return 0
+            if tokens[i] == terminale[1] and tokens[i - 1] == terminale[0]:
                 order -= 1
+            elif tokens[i] == terminale[1] and tokens[i - 1] != terminale[0]:
+                return 0
         buffer = tokens[i]
     if order == 0:
         return 1
@@ -77,6 +84,7 @@ def parser():
     global tokens
     global programm_counter
 
+    colums = []
     content_buffer = content[programm_counter].split()
     print (content[programm_counter].split())
     token_buffer = tokens
@@ -91,6 +99,10 @@ def parser():
     if content_buffer[0].upper() == "SELECT":
         print(DB.get(content_buffer[1], content_buffer[content_buffer.index("FROM") + 1].split(";")[0]))
         tokens = []
+    elif content_buffer[0].upper() == "CREATE":
+        for i in range(content_buffer.index("WITH") + 1, len(content_buffer) -1):
+            colums.append(content_buffer[i])
+        DB.create(colums, content_buffer[1])
     else:
         print("Anweisung ist semantisch sinnlos")
     programm_counter += 1

@@ -28,8 +28,17 @@ class DummyDB:
         if exist:
             return content.get(key)
 
-    def set(self, key, value):
-        self.DB[key] = value
+    def create(self, keys, name):
+        try:
+            for key in keys:
+                key = self.key_type_converter(key)
+                print ("self.{} = {},".format("{" + name.replace("\"", "").replace("\'", "")\
+                                                                                ,(len(key) - 1) * (key.replace(",", "")\
+                                                                                                   + ":None, ") + "}"))
+        except NameError:
+            print("{} existiert nicht in {}".format(key, name))
+        except AttributeError as e:
+            print(e)
 
     def key_type_converter(self, key):
         if list(key)[0] == "\"" and list(key)[-1] == "\"" or list(key)[0] == "\'" and list(key)[-1] == "\'":

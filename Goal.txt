@@ -1,1 +1,1 @@
-SELECT "1" from DB;
+CREATE "Table" WITH "C1", "C2";
