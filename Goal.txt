@@ -1,3 +1,10 @@
 CREATE "Table" WITH "C1", "C2", "C3";
 SET "C3" IN "Table" TO 5;
-SAVE "save.bdb";
+
+CReate "Table2" WITH "Col1", "COL2", "Coln";
+set "COL2" in "Table2" to 43M;
+
+Select * from Table2;
+select * from Table;
+
+Save "save.bdb";

@@ -4,7 +4,7 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN", "SAVE"), terminale[1]:("*", "KEYS")}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN", "SAVE", "HALLO", "LOAD"), terminale[1]:("*", "KEYS")}
 
 tokens = []
 content = []
@@ -84,6 +84,7 @@ def parser():
     global programm_counter
 
     columns = []
+    print(programm_counter)
     content_buffer = content[programm_counter].split()
     #print (content[programm_counter].split())
     token_buffer = tokens
@@ -123,6 +124,7 @@ def parser():
                         if type(key) == str:
                             columns += "\"{}\"".format(key)
                 file.writelines("CREATE {} WITH {};".format(Save[i][0], columns) + "\n")
+                columns = ""
                 for j in list(Save[i][1].items()):
                     for k in j:
                         if type(j[0]) == str:
@@ -132,6 +134,14 @@ def parser():
                         if j.index(k) != 0:
                             file.writelines("SET {} IN {} TO {}; \n".format(key, Save[i][0], k))
         tokens = []
+
+    elif content_buffer[0] == "HALLO":
+        tokens = []
+        content = []
+        programm_counter = 0
+        temp_content_buffer = content_buffer[1]
+        content_buffer = []
+        tokenizer(temp_content_buffer.replace(";","").replace("\"","").replace("\'",""))
     else:
         print("Anweisung ist semantisch sinnlos")
     programm_counter += 1
