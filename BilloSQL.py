@@ -4,7 +4,7 @@ import sys
 DB = DummyDB.DummyDB()
 
 terminale = ("Expr", "Inp")
-nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH"), terminale[1]:"*"}
+nterminale = {terminale[0]:("SELECT", "FROM", "CREATE", "WITH", "SET", "TO", "IN"), terminale[1]:"*"}
 
 tokens = []
 content = []
@@ -100,9 +100,10 @@ def parser():
         print(DB.get(content_buffer[1], content_buffer[content_buffer.index("FROM") + 1].split(";")[0]))
         tokens = []
     elif content_buffer[0].upper() == "CREATE":
-        for i in range(content_buffer.index("WITH") + 1, len(content_buffer) -1):
+        for i in range(content_buffer.index("WITH") + 1, len(content_buffer)):
             colums.append(content_buffer[i])
         DB.create(colums, content_buffer[1])
+        tokens = []
     else:
         print("Anweisung ist semantisch sinnlos")
     programm_counter += 1

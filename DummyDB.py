@@ -29,16 +29,38 @@ class DummyDB:
             return content.get(key)
 
     def create(self, keys, name):
+        print(keys)
+        append = ""
         try:
             for key in keys:
                 key = self.key_type_converter(key)
-                print ("self.{} = {},".format("{" + name.replace("\"", "").replace("\'", "")\
-                                                                                ,(len(key) - 1) * (key.replace(",", "")\
-                                                                                                   + ":None, ") + "}"))
+                if ";" not in key:
+                    append += key.replace(",", "") + ":None, "
+                else:
+                    append += key.replace(",", "").replace(";", "") + ":None"
+            exec("self.{} = {}".format(name.replace("\"", "").replace("\'", ""), "{" + append + "}"))
+            print(self.Table)
         except NameError:
             print("{} existiert nicht in {}".format(key, name))
         except AttributeError as e:
             print(e)
+
+    def set(self, key, value, name):
+        exist = False
+        key = self.key_type_converter(key)
+        try:
+            content = eval("self.{}".format(name))
+            exist = True
+            if key == "*":
+                for key in content.keys:
+                    content[key] = value
+        except NameError:
+            exist = False
+            print("{} existiert nicht in {}".format(key, name))
+        except AttributeError as e:
+            print(e)
+        if exist:
+            content[key] = value
 
     def key_type_converter(self, key):
         if list(key)[0] == "\"" and list(key)[-1] == "\"" or list(key)[0] == "\'" and list(key)[-1] == "\'":
