@@ -86,6 +86,19 @@ def grammar_check():
         return 1
     return 0
 
+def comma_split(cb):
+    index = []
+    buffer = cb
+    for i in range(len(cb)):
+        if "," in cb[i]:
+           index.append(i)
+
+    for i in index:
+        buffer.insert(i, cb[i].replace(",", ""))
+        buffer.insert(i + 1, ",")
+
+    return buffer
+
 
 def parser():
     global content
@@ -94,6 +107,7 @@ def parser():
     global temp_content
     columns = []
     content_buffer = content[programm_counter].split()
+    content_buffer = comma_split(content_buffer)
     #print (content[programm_counter].split())
     token_buffer = tokens
     for i in range(len(content_buffer)):

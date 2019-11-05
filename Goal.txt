@@ -1,3 +1,2 @@
-HALLO "save.bdb";
 
-SELECT * FROM Table31;
+SELECT "C1", "C2" FROM Table31;

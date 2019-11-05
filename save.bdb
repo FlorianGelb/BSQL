@@ -1,9 +1,11 @@
 CREATE "Table3" WITH "C2", "C3";
 SET "C2" IN "Table3" TO 412; 
 SET "C3" IN "Table3" TO None; 
+
 CREATE "Table31" WITH "C2", "C3";
 SET "C2" IN "Table31" TO 412; 
 SET "C3" IN "Table31" TO None; 
+
 CREATE "Table33" WITH "C2", "C3";
 SET "C2" IN "Table33" TO 412; 
 SET "C3" IN "Table33" TO None; 
