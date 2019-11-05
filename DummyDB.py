@@ -34,24 +34,30 @@ class DummyDB:
         #print(keys)
         append = ""
         try:
-            for key in keys:
-                key = self.key_type_converter(key)
-                if ";" not in key:
-                    append += key.replace(",", "") + ":None, "
-                else:
-                    append += key.replace(",", "").replace(";", "") + ":None"
-            exec("self.{} = {}".format(name.replace("\"", "").replace("\'", ""), "{" + append + "}"))
-            self.names.append(name)
-            #print(self.Table)
-        except NameError:
-            print("{} existiert nicht in {}".format(key, name))
-        except AttributeError as e:
-            print(e)
+            eval("self.{}".format(name.replace("\"","").replace("\'", "")))
+            print("die Tabelle {} existiert bereits".format(name))
+            return 0
+        except Exception:
+            try:
+                for key in keys:
+                    key = self.key_type_converter(key)
+                    if ";" not in key:
+                        append += key.replace(",", "") + ":None, "
+                    else:
+                        append += key.replace(",", "").replace(";", "") + ":None"
+                exec("self.{} = {}".format(name.replace("\"", "").replace("\'", ""), "{" + append + "}"))
+                self.names.append(name)
+                #print(self.Table)
+            except NameError:
+                print("{} existiert nicht in {}".format(key, name))
+            except AttributeError as e:
+                print(e)
 
     def set(self, key, value, name):
         exist = False
         key = self.key_type_converter(key)
         name = name.replace("\"","").replace("\'", "")
+
         try:
             content = eval("self.{}".format(name).replace(";", ""))
             if key in list(content.keys()):

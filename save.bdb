@@ -1,11 +1,9 @@
-CREATE "Table" WITH "C1", "C2", "C3";
-SET "C1" IN "Table" TO None; 
-SET "C2" IN "Table" TO None; 
-SET "C3" IN "Table" TO 5; 
-CREATE "Table2" WITH "Col1", "COL2", "Coln";
-SET "Col1" IN "Table2" TO None; 
-SET "COL2" IN "Table2" TO 43M; 
-SET "Coln" IN "Table2" TO None; 
 CREATE "Table3" WITH "C2", "C3";
-SET "C2" IN "Table3" TO 432; 
+SET "C2" IN "Table3" TO 412; 
 SET "C3" IN "Table3" TO None; 
+CREATE "Table31" WITH "C2", "C3";
+SET "C2" IN "Table31" TO 412; 
+SET "C3" IN "Table31" TO None; 
+CREATE "Table33" WITH "C2", "C3";
+SET "C2" IN "Table33" TO 412; 
+SET "C3" IN "Table33" TO None; 

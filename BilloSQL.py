@@ -14,7 +14,7 @@ content = []
 temp_content = []
 programm_counter = 0
 
-
+t = 0
 
 def file_parser(file):
     content = []
@@ -56,7 +56,8 @@ def tokenizer(file):
 #               tokens.append(terminale[2])
 
         if(grammar_check()):
-            parser()
+            if parser() == 0:
+                return 0
         else:
             print("Die Anweisung ist nicht richtig")
 
@@ -144,6 +145,7 @@ def parser():
         tokens = []
 
     elif content_buffer[0] == "HALLO":
+
         del content[0]
         temp_content = content
         DB.reset()
@@ -152,6 +154,8 @@ def parser():
         tokens = []
         tokenizer(None)
         programm_counter = -1
+        return 0
+
 
     else:
         print("Anweisung ist semantisch sinnlos")
